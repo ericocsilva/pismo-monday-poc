@@ -1,0 +1,50 @@
+# Databricks Asset Bundle - Pismo Monday.com PoC
+# Lakeflow Community Connector: Monday.com → Unity Catalog
+# Repo: https://github.com/colin-gibbons/lakeflow-community-connectors/tree/monday-connector
+
+bundle:
+  name: pismo-monday-poc
+
+resources:
+  pipelines:
+    pismo_monday_lakeflow:
+      name: "Pismo - Monday.com Lakeflow Community Connector"
+      catalog: catalog_1aphlh_uefz2w
+      schema: pismo_monday_poc
+      libraries:
+        - file:
+            path: ./pismo_monday_ingest.py
+        - file:
+            path: ./pipeline/ingestion_pipeline.py
+        - file:
+            path: ./libs/spec_parser.py
+        - file:
+            path: ./libs/source_loader.py
+        - file:
+            path: ./libs/utils.py
+        - file:
+            path: ./sources/monday/_generated_monday_python_source.py
+        - file:
+            path: ./sources/monday/monday.py
+        - file:
+            path: ./sources/__init__.py
+        - file:
+            path: ./sources/monday/__init__.py
+        - file:
+            path: ./sources/interface/__init__.py
+        - file:
+            path: ./sources/interface/lakeflow_connect.py
+        - file:
+            path: ./libs/__init__.py
+        - file:
+            path: ./pipeline/__init__.py
+      serverless: true
+      channel: PREVIEW
+      clusters: []
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-7405618499553895.15.azuredatabricks.net

@@ -1,0 +1,30 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Databricks
+.databricks/
+
+# IDE
+.vscode/
+.idea/
+.claude/
+
+# Secrets / sensitive configs
+sources/monday/configs/dev_config.json
+sources/monday/configs/dev_table_config.json
+
+# macOS
+.DS_Store
+
+# Misc
+__builtins__.pyi
+/tmp/
