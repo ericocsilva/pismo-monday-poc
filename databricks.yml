@@ -9,7 +9,7 @@ resources:
   pipelines:
     pismo_monday_lakeflow:
       name: "Pismo - Monday.com Lakeflow Community Connector"
-      catalog: catalog_1aphlh_uefz2w
+      catalog: catalog_ajcos9_0aa1b0
       schema: pismo_monday_poc
       libraries:
         - file:
@@ -47,4 +47,4 @@ targets:
     mode: development
     default: true
     workspace:
-      host: https://adb-7405618499553895.15.azuredatabricks.net
+      host: https://adb-7405612655723059.19.azuredatabricks.net

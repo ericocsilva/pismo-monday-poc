@@ -29,7 +29,7 @@ source_name = "monday"
 # API token stored in Databricks Secrets (scope: monday_poc, key: api_token)
 api_token = dbutils.secrets.get(scope="monday_poc", key="api_token")  # noqa: F821
 
-TARGET_CATALOG = "catalog_1aphlh_uefz2w"
+TARGET_CATALOG = "catalog_ajcos9_0aa1b0"
 TARGET_SCHEMA = "pismo_monday_poc"
 
 # Board IDs for all Pismo demo boards

@@ -1,0 +1,42 @@
+# This is a Databricks asset bundle definition for MondayConnector.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: MondayConnector
+  uuid: 6ae5ea3d-480a-452c-bfa9-eef4f6e9945f
+
+include:
+  - resources/*.yml
+  - resources/*/*.yml
+
+# Variable declarations. These variables are assigned in the dev/prod targets below.
+variables:
+  catalog:
+    description: The catalog to use
+  schema:
+    description: The schema to use
+
+targets:
+  dev:
+    # The default target uses 'mode: development' to create a development copy.
+    # - Deployed resources get prefixed with '[dev my_user_name]'
+    # - Any job schedules and triggers are paused by default.
+    # See also https://docs.databricks.com/dev-tools/bundles/deployment-modes.html.
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-7405612655723059.19.azuredatabricks.net
+    variables:
+      catalog: catalog_ajcos9_0aa1b0
+      schema: dev
+  prod:
+    mode: production
+    workspace:
+      host: https://adb-7405612655723059.19.azuredatabricks.net
+      # We explicitly deploy to /Workspace/Users/erico.silva@databricks.com to make sure we only have a single copy.
+      root_path: /Workspace/Users/erico.silva@databricks.com/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      catalog: catalog_ajcos9_0aa1b0
+      schema: prod
+    permissions:
+      - user_name: erico.silva@databricks.com
+        level: CAN_MANAGE

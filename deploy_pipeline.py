@@ -7,7 +7,7 @@ import base64
 from databricks.sdk import WorkspaceClient
 from databricks.sdk.service import pipelines, workspace
 
-WORKSPACE_HOST = "https://adb-7405618499553895.15.azuredatabricks.net"
+WORKSPACE_HOST = "https://adb-7405612655723059.19.azuredatabricks.net"
 BASE_PATH = "/Users/erico.silva/Monday"
 
 # Workspace path for all connector files
@@ -33,33 +33,26 @@ FILES = [
 
 
 def upload_file(ws: WorkspaceClient, local_path: str, ws_path: str):
-    """Upload a file to the Databricks workspace using workspace import API."""
-    import requests as req
+    """Upload a file to the Databricks workspace using the SDK."""
+    from databricks.sdk.service.workspace import ImportFormat
     full_local = os.path.join(BASE_PATH, local_path)
     full_ws = f"{WS_BASE}/{ws_path}"
 
     with open(full_local, "rb") as f:
         content = f.read()
 
-    # Use the workspace import REST endpoint directly
-    resp = req.post(
-        f"{WORKSPACE_HOST}/api/2.0/workspace/import",
-        headers={"Authorization": f"Bearer {ws.config.token}"},
-        json={
-            "path": full_ws,
-            "content": base64.b64encode(content).decode("utf-8"),
-            "format": "AUTO",
-            "overwrite": True,
-        },
+    ws.workspace.import_(
+        path=full_ws,
+        content=base64.b64encode(content).decode("utf-8"),
+        format=ImportFormat.AUTO,
+        overwrite=True,
     )
-    if resp.status_code != 200:
-        raise RuntimeError(f"Upload failed for {ws_path}: {resp.text}")
     print(f"  Uploaded: {ws_path}")
 
 
 def main():
     # Uses ~/.databrickscfg [TKO] profile for authentication
-    ws = WorkspaceClient(host=WORKSPACE_HOST, profile="TKO")
+    ws = WorkspaceClient(host=WORKSPACE_HOST, profile="Demo")
 
     print("=== Uploading connector files to workspace ===")
     for local, remote in FILES:
@@ -87,7 +80,7 @@ def main():
 
     create_kwargs = dict(
         name=PIPELINE_NAME,
-        catalog="catalog_1aphlh_uefz2w",
+        catalog="catalog_ajcos9_0aa1b0",
         schema="pismo_monday_poc",
         serverless=True,
         channel="PREVIEW",

@@ -12,8 +12,8 @@ The connector reads data from Monday.com's GraphQL API and lands it as Delta tab
 https://github.com/colin-gibbons/lakeflow-community-connectors/tree/monday-connector
 
 **Deployed workspace:**
-https://adb-7405618499553895.15.azuredatabricks.net
-Pipeline: `Pismo - Monday.com Lakeflow Community Connector` (ID: `9fa16b5b-d612-459a-b82d-316aaee4c68c`)
+https://adb-7405612655723059.19.azuredatabricks.net
+Pipeline: `Pismo - Monday.com Lakeflow Community Connector` (ID: `21c9662d-776f-4f9e-97e7-2870c062b899`)
 
 ---
 
@@ -35,7 +35,7 @@ Spark Declarative Pipeline (SDP)
   pipeline/ingestion_pipeline.py
         │
         ▼
-Unity Catalog — catalog_1aphlh_uefz2w.pismo_monday_poc
+Unity Catalog — catalog_ajcos9_0aa1b0.pismo_monday_poc
   ├── boards          (CDC / incremental)
   ├── items           (CDC / incremental)
   ├── users           (snapshot / full refresh)
@@ -197,12 +197,12 @@ BOARD_IDS = "18403157289,18403163013,18403163137,18403163276"
 This script uploads all connector files to the Databricks workspace and creates (or updates) the SDP pipeline via the SDK.
 
 ```bash
-# Ensure ~/.databrickscfg has a [TKO] profile:
-# [TKO]
-# host  = https://adb-7405618499553895.15.azuredatabricks.net
-# token = <your-token>
+# Ensure ~/.databrickscfg has a [Demo] profile pointing to your workspace:
+# [Demo]
+# host      = https://adb-7405612655723059.19.azuredatabricks.net
+# auth_type = databricks-cli
 
-python deploy_pipeline.py
+DATABRICKS_CONFIG_PROFILE=Demo python deploy_pipeline.py
 ```
 
 The script will:
@@ -235,7 +235,7 @@ Once deployed, trigger a pipeline run from the Databricks UI:
 Or via CLI:
 
 ```bash
-databricks pipelines start 9fa16b5b-d612-459a-b82d-316aaee4c68c
+databricks pipelines start 21c9662d-776f-4f9e-97e7-2870c062b899 --profile=Demo
 ```
 
 ### Verifying the Data
@@ -243,7 +243,7 @@ databricks pipelines start 9fa16b5b-d612-459a-b82d-316aaee4c68c
 After the pipeline completes, query the tables in SQL:
 
 ```sql
-USE CATALOG catalog_1aphlh_uefz2w;
+USE CATALOG catalog_ajcos9_0aa1b0;
 USE SCHEMA pismo_monday_poc;
 
 SELECT * FROM boards;
@@ -318,7 +318,7 @@ These boards live in the `databricks792224.monday.com` demo environment and were
 | `ModuleNotFoundError: No module named 'libs'` | `_root` not in `sys.path` | Verify `sys.path.insert(0, _root)` runs before imports |
 | `ValueError: Monday.com connector requires 'api_token'` | Token missing during metadata read phase | The `tableConfigs` fallback in `_generated_monday_python_source.py` handles this |
 | `401 Unauthorized` from Monday.com API | Token expired or incorrect | Regenerate token and update Databricks Secret |
-| `BadRequest: unsupported first path component: Workspace` | Using `ws.files.upload()` for workspace paths | Use `/api/2.0/workspace/import` REST endpoint (already done in `deploy_pipeline.py`) |
+| `BadRequest: unsupported first path component: Workspace` | Using `ws.files.upload()` for workspace paths | Use `ws.workspace.import_()` SDK method (already done in `deploy_pipeline.py`) |
 
 ---
 
